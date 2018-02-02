@@ -2,21 +2,20 @@ from appJar import gui
 import time
 import lazylights
 import binascii
-#------------------------------------------------------------------------------------------------------------
-# I use this to manually create a bulb using IP and MAC address.
-def createBulb(ip, macString, port = 56700):
-    return lazylights.Bulb(b'LIFXV2', binascii.unhexlify(macString.replace(':', '')), (ip,port))
-#------------------------------------------------------------------------------------------------------------
-
 
 def press(name):
     
+    global bulbs
     
     print(name, "button pressed")
     #app.setLabel("lbl1","Pressed " + str(count) + " Times")
     
     if (name == "Exit") :
         app.stop()
+    if (name == "Find Bulbs") :
+        
+        bulbs = lazylights.find_bulbs()
+        print (bulbs)
     elif (name == "On") :
         app.warn("ON")
         app.setImage("Light","bulb_on.gif")
@@ -27,12 +26,10 @@ def press(name):
         lazylights.set_power(bulbs, False)
 
 
-
-
 app = gui("Lights")
 
 app.addLabel("lbl1", "LIFX Controller")
-
+app.addButton("Find Bulbs",press)
 app.setBg("white")
 #app.setFg("white")
 app.setFont(16)
@@ -41,10 +38,8 @@ app.addImage("Light","bulb_off.gif")
 app.addButtons(["On","Off"],press)
 app.addButton("Exit",press)
 
-myBulb1 = createBulb('192.168.1.56','D0:73:D5:03:19:E3')  
-myBulb2 = createBulb('192.168.1.156','D0:73:D5:02:39:CB')  
-bulbs=[myBulb1, myBulb2]
-
+bulbs = lazylights.find_bulbs()
+print (bulbs)
 app.go()
 
 app.warn("App Ended")

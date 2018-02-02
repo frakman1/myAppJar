@@ -10,7 +10,7 @@ _FORMAT_SIZE = struct.calcsize(_BASE_FORMAT)
 
 _SOCKET_BUFFER_SIZE = 65536
 
-ALL_BULBS = '\x00' * 6
+ALL_BULBS = b'\x00' * 6
 
 LIFX_PORT = 56700
 ADDR_BROADCAST = ('255.255.255.255', LIFX_PORT)
@@ -85,7 +85,7 @@ def build_packet(packet_type, gateway, bulb, payload_fmt, *payload_args,
     protocol field in the packet.
     """
     protocol = kwargs.get('protocol', PROTOCOL_COMMAND)
-    print payload_args
+    print (payload_args)
     packet_fmt = _BASE_FORMAT + payload_fmt
     packet_size = struct.calcsize(packet_fmt)
     return struct.pack(packet_fmt,
@@ -187,7 +187,7 @@ def set_state(bulbs, hue, saturation, brightness, kelvin, fade, raw=False):
         saturation = int(saturation * 0xffff) & 0xffff
         brightness = int(brightness * 0xffff) & 0xffff
 
-    _send(bulbs, REQ_SET_LIGHT_STATE, 'xHHHHI',
+    _send(bulbs, REQ_SET_LIGHT_STATE, b'xHHHHI',
           hue, saturation, brightness, kelvin, fade)
 
 
